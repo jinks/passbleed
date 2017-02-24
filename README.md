@@ -4,10 +4,12 @@ found [here](https://github.com/pirate/sites-using-cloudflare).
 
 ## Download
 Head to the [Releases](https://github.com/jinks/passbleed/releases) page and grab a copy for your OS (only the Linux release was tested)
+
 or:
 ```
-    go get github.com/jinks/passbleed
+go get github.com/jinks/passbleed
 ```
+(required Go 1.8+)
 
 ## Usage
 1. Export your KeePass database to CSV format with either [KeePass](http://keepass.info/) v2.35, [KeePassX](https://www.keepassx.org/) v2.0.3 or [KeepassXC](https://keepassxc.org/) v2.1.2
