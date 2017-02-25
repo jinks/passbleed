@@ -1,5 +1,5 @@
 # Passbleed
-Passbleed checks your exported KeePass database against the ClodBleed list
+Passbleed checks your exported KeePass database against the CloudBleed list
 found [here](https://github.com/pirate/sites-using-cloudflare).
 
 ## Download
