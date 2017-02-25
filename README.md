@@ -20,4 +20,7 @@ go get github.com/jinks/passbleed
 * All processing happens in RAM. On my machine it uses about 400 MB
 * __The exported CSV contains sensitive data.__ Put it on an encrypted disk and/or _securely_ delete it when you're done.
 
-
+## Changelog
+v1.1:
+* Added 1Password CSV support
+* Sorted output

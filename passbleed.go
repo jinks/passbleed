@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/url"
 	"os"
+	"sort"
 	"strings"
 
 	"golang.org/x/net/publicsuffix"
@@ -19,6 +20,10 @@ const (
 	_
 	KeePass1Format
 	KeePassXFormat
+	_
+	_
+	_
+	OnePasswordFormat
 )
 
 // Domain to check
@@ -32,13 +37,16 @@ func findCSVType(reader *csv.Reader) (int, error) {
 	} else if err != nil {
 		return UnknownFormat, err
 	}
-	if header[3] == "Web Site" {
+	if len(header) >= 4 && header[3] == "Web Site" {
 		return KeePass1Format, nil
 	}
-	if header[4] == "URL" {
+	if len(header) >= 5 && header[4] == "URL" {
 		return KeePassXFormat, nil
 	}
-	return UnknownFormat, fmt.Errorf("unkonwn CSV format, please use KeePass2 or KeePassX CSV export")
+	if len(header) >= 9 && header[8] == "urls" {
+		return OnePasswordFormat, nil
+	}
+	return UnknownFormat, fmt.Errorf("unkonwn CSV format, please use KeePass2, KeePassX or 1Password CSV export")
 
 }
 
@@ -118,9 +126,10 @@ func main() {
 	}
 	fmt.Print(cloudBleed.Cardinality(), " domains found.\n\n")
 
-	inDanger := keepass.Intersect(*cloudBleed)
-	fmt.Println(inDanger.Cardinality(), "potentially endangered domains:")
-	for k := range inDanger {
+	inDanger := keepass.Intersect(*cloudBleed).ToSlice()
+	sort.Slice(inDanger, func(i, j int) bool { return inDanger[i] < inDanger[j] })
+	fmt.Println(len(inDanger), "potentially endangered domains:")
+	for _, k := range inDanger {
 		fmt.Println(k)
 	}
 
