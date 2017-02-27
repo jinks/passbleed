@@ -21,6 +21,10 @@ go get github.com/jinks/passbleed
 * __The exported CSV contains sensitive data.__ Put it on an encrypted disk and/or _securely_ delete it when you're done.
 
 ## Changelog
+v1.2:
+* Support emebedded quotes
+* Added LastPass CSV support (untested)
+
 v1.1:
 * Added 1Password CSV support
 * Sorted output

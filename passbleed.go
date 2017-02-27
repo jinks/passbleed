@@ -15,7 +15,8 @@ import (
 
 // Different CSV formats
 const (
-	UnknownFormat = iota
+	UnknownFormat = -1 + iota
+	LastPassFormat
 	_
 	_
 	KeePass1Format
@@ -37,17 +38,18 @@ func findCSVType(reader *csv.Reader) (int, error) {
 	} else if err != nil {
 		return UnknownFormat, err
 	}
-	if len(header) >= 4 && header[3] == "Web Site" {
+	switch {
+	case len(header) >= 1 && header[0] == "url":
+		return LastPassFormat, nil
+	case len(header) >= 4 && header[3] == "Web Site":
 		return KeePass1Format, nil
-	}
-	if len(header) >= 5 && header[4] == "URL" {
+	case len(header) >= 5 && header[4] == "URL":
 		return KeePassXFormat, nil
-	}
-	if len(header) >= 9 && header[8] == "urls" {
+	case len(header) >= 9 && header[8] == "urls":
 		return OnePasswordFormat, nil
+	default:
+		return UnknownFormat, fmt.Errorf("unkonwn CSV format, please use a supported export format (see README)")
 	}
-	return UnknownFormat, fmt.Errorf("unkonwn CSV format, please use KeePass2, KeePassX or 1Password CSV export")
-
 }
 
 func buildKeepass(filename string) (*DomainSet, error) {
@@ -58,6 +60,7 @@ func buildKeepass(filename string) (*DomainSet, error) {
 	defer file.Close()
 
 	reader := csv.NewReader(file)
+	reader.LazyQuotes = true
 	col, err := findCSVType(reader)
 	if err != nil {
 		return nil, err
