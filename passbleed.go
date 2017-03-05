@@ -48,7 +48,7 @@ func findCSVType(reader *csv.Reader) (int, error) {
 	case len(header) >= 9 && header[8] == "urls":
 		return OnePasswordFormat, nil
 	default:
-		return UnknownFormat, fmt.Errorf("unkonwn CSV format, please use a supported export format (see README)")
+		return UnknownFormat, fmt.Errorf("unknown CSV format, please use a supported export format (see README)")
 	}
 }
 
